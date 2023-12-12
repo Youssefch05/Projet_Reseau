@@ -120,9 +120,11 @@ int main(int argc, char *argv[])
      bzero(buffer,256);
 
      n = read(newsockfd,buffer,255);
-     if(buffer[0] == 'I'){
-      send(newsockfd, "identifiant bien reçu, entrez maintenant votre identifiant\n", 256,0);     }
-     }
+       if (n < 0) perror("ERROR reading from socket");
+       printf("Here is the message: %s\n",buffer);
+      send(newsockfd, "identifiant bien reçu, entrez maintenant votre identifiant\n", 256,0);     
+      }
+
 
 
      

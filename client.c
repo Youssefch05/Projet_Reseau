@@ -39,10 +39,12 @@ int main(int argc, char *argv[])
     if (connect(sockfd, (struct sockaddr *) &serv_addr, sizeof(serv_addr)) < 0) 
 
         herror("ERROR connecting");
-    printf("veuillez entrer votre id_client: ");
-
+    while(1){
+   
     bzero(buffer,256);
+     printf("Please enter the message: ");    
     fgets(buffer,255,stdin);
+
     n = write(sockfd, buffer, strlen(buffer));
     if (n < 0) 
          herror("ERROR writing to socket");
@@ -51,6 +53,7 @@ int main(int argc, char *argv[])
     if (n < 0) 
          herror("ERROR reading from socket");
     printf("%s\n", buffer);
+    }
     close(sockfd);
     return 0;
 }
