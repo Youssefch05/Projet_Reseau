@@ -37,8 +37,10 @@ int main(int argc, char *argv[])
          server->h_length);
     serv_addr.sin_port = htons(portno);
     if (connect(sockfd, (struct sockaddr *) &serv_addr, sizeof(serv_addr)) < 0) 
+
         herror("ERROR connecting");
-    printf("veuillez entrer votre id_client, l'id du compte, votre mot de passe et l'opération souhaitée      v  : ");
+    printf("veuillez entrer votre id_client: ");
+
     bzero(buffer,256);
     fgets(buffer,255,stdin);
     n = write(sockfd, buffer, strlen(buffer));

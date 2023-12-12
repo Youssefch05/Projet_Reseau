@@ -111,21 +111,17 @@ int main(int argc, char *argv[])
 
 
      // This send() function sends the 13 bytes of the string to the new socket
-     send(newsockfd, "Hello, world!\n", 13, 0);
+     send(newsockfd, "veuillez entrer votre identifiant", 256, 0);
+     
+
+
+   
 
      bzero(buffer,256);
 
      n = read(newsockfd,buffer,255);
-     if (n < 0) perror("ERROR reading from socket");
-     if(strcmp(buffer,"retrait\n")){
-        printf("retrait\n");
-     }
-     if( strcmp(buffer,"depot\n")){
-        printf("depot\n");
-     }
-     if( strcmp(buffer,"solde\n")){
-        printf("solde\n");
-     }
+     if(buffer[0] == 'I'){
+      send(newsockfd, "identifiant bien reçu, entrez maintenant votre identifiant\n", 256,0);     }
      }
 
 
