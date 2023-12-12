@@ -40,20 +40,21 @@ int main(int argc, char *argv[])
 
         herror("ERROR connecting");
     while(1){
+           n = read(sockfd, buffer, 255);
+    if (n < 0) 
+         herror("ERROR reading from socket");
+    printf("%s\n", buffer);
+    
    
     bzero(buffer,256);
      printf("Please enter the message: ");    
-    fgets(buffer,255,stdin);
+        fgets(buffer,255,stdin);
 
     n = write(sockfd, buffer, strlen(buffer));
     if (n < 0) 
          herror("ERROR writing to socket");
-    bzero(buffer,256);
-    n = read(sockfd, buffer, 255);
-    if (n < 0) 
-         herror("ERROR reading from socket");
-    printf("%s\n", buffer);
-    }
+    bzero(buffer,256);}
     close(sockfd);
+
     return 0;
 }

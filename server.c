@@ -41,6 +41,35 @@ return 0;
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
+#define  AJOUT 0
+#define RETRAIT 1
+#define SOLDE 2
+#define OPERATION 3
+
+typedef struct {
+   int identifiant;
+char password[256];
+int nb_comptes;
+int id_compte[nb_comptes];
+
+
+
+
+
+
+}client_t;
+
+typedef struct{
+   int solde;
+   int id_compte;
+   int derniere_operation[10];
+
+}compte_t;
+
+compte_t tab_compte[10];
+
+client_t tab_client[5];
+
 
 
 
@@ -56,12 +85,31 @@ int main(int argc, char *argv[])
          fprintf(stderr,"ERROR, no port provided\n");
          exit(1);
      }
+     for( int i = 0; i<10; i++){
+   tab_compte[i].solde = i*10;
+   tab_compte[i].id_compte = i;
+
+   for(int j = 0; j<5; j++){
+      tab_client[j].identifiant = j*3;
+      tab_client[j].password = "abc" + j;
+      tab_client[j].nb_comptes = 2;
+      tab_client[j].id_compte[0] = j;
+      tab_client[j].id_compte[1] = j+1;
+      
+
+
+   }
+   
+}
+
+
      // create a socket
      // socket(int domain, int type, int protocol)
      sockfd =  socket(AF_INET, SOCK_STREAM, 0);
      if (sockfd < 0) 
         perror("ERROR opening socket");
 
+     setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, &(int){ 1 }, sizeof(int));
      // clear address structure
      bzero((char *) &serv_addr, sizeof(serv_addr));
 
@@ -111,19 +159,23 @@ int main(int argc, char *argv[])
 
 
      // This send() function sends the 13 bytes of the string to the new socket
-     send(newsockfd, "veuillez entrer votre identifiant", 256, 0);
+       send(newsockfd, "Hello, world!\n", 13, 0);
+         //bzero(buffer,256);
+
      
 
 
    
 
      bzero(buffer,256);
-
+      //Lecture de l'identifiant du client
      n = read(newsockfd,buffer,255);
        if (n < 0) perror("ERROR reading from socket");
        printf("Here is the message: %s\n",buffer);
       send(newsockfd, "identifiant bien reçu, entrez maintenant votre identifiant\n", 256,0);     
+       bzero(buffer,256);
       }
+     
 
 
 
