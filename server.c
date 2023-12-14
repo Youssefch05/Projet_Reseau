@@ -74,7 +74,6 @@ typedef struct{
 typedef struct {
    int identifiant;
 char password[256];
-   int id_compte[2];
 compte_t compte[2];
 
 
@@ -95,10 +94,10 @@ client_t tab_client[5];
 int find_client(int id){
    for(int i = 0; i<5; i++){
       if(tab_client[i].identifiant == id){
-         return 1; //1 si le client existe
+         return true; //1 si le client existe
       }
    }
-   return 0; //0 si le client n'existe pas
+   return false; //0 si le client n'existe pas
 }
 
 int correctpassword(client_t client, char *password){
@@ -110,7 +109,7 @@ int correctpassword(client_t client, char *password){
 
 int find_compte(client_t client, int id){
    for(int i = 0; i<2; i++){
-      if(client.id_compte[i] == id){
+      if(client.compte[i].id_compte == id){
          return 1; //1 si le compte est associé au client
       }
    }
@@ -120,13 +119,11 @@ int find_compte(client_t client, int id){
 void initializeBanque(banque_t *banque) {
     for (int i = 0; i < 5; i++) {
         banque->clients[i].identifiant = i + 1;
-         printf("banque->clients[%d].identifiant = %d\n", i, banque->clients[i].identifiant);
+         //printf("banque->clients[%d].identifiant = %d\n", i, banque->clients[i].identifiant);
         sprintf(banque->clients[i].password, "password%d", i + 1);
-        printf("banque->clients[%d].password = %s\n", i, banque->clients[i].password);
-         banque->clients[i].id_compte[0] = i * 2 + 1;
-         banque->clients[i].id_compte[1] = i * 2 + 2;//2 comptes par client
-         printf("banque->clients[%d].id_compte[0] = %d\n", i, banque->clients[i].id_compte[0]);
-         printf("banque->clients[%d].id_compte[1] = %d\n", i, banque->clients[i].id_compte[1]);
+        //printf("banque->clients[%d].password = %s\n", i, banque->clients[i].password);//2 comptes par client
+         //printf("banque->clients[%d].id_compte[0] = %d\n", i, banque->clients[i].compte->id_compte);
+         //printf("banque->clients[%d].id_compte[1] = %d\n", i, banque->clients[i].compte->id_compte);
          
 
 
@@ -136,7 +133,7 @@ void initializeBanque(banque_t *banque) {
         for (int j = 0; j < 2; j++) {
             banque->clients[i].compte[j].solde = (i + 1) * 1000 + j * 500;
             banque->clients[i].compte[j].id_compte = i * 2 + j + 1;
-            printf("banque->clients[%d].compte[%d].solde = %d\n", i, j, banque->clients[i].compte[j].solde);
+            //printf("banque->clients[%d].compte[%d].solde = %d\n", i, j, banque->clients[i].compte[j].solde);
 
             // Initialize last 10 operations for each account
             for (int k = 0; k < 10; k++) {
@@ -145,7 +142,7 @@ void initializeBanque(banque_t *banque) {
                 banque->clients[i].compte[j].dernieres_operations[k].date_operation.jour = k;
                 banque->clients[i].compte[j].dernieres_operations[k].date_operation.mois = k;
                 banque->clients[i].compte[j].dernieres_operations[k].date_operation.annee = 2023;
-                printf("banque->clients[%d].compte[%d].dernieres_operations[%d].montant = %d\n", i, j, k, banque->clients[i].compte[j].dernieres_operations[k].montant);
+                //printf("banque->clients[%d].compte[%d].dernieres_operations[%d].montant = %d\n", i, j, k, banque->clients[i].compte[j].dernieres_operations[k].montant);
             }
         }
     }
@@ -161,7 +158,7 @@ int main(int argc, char *argv[])
        initializeBanque(&mabanque);
 
      int sockfd, newsockfd, portno;
-     socklen_t clilen;
+     socklen_t clilen;         
      char buffer[256];
      struct sockaddr_in serv_addr, cli_addr;
      int n;
@@ -228,9 +225,19 @@ int main(int argc, char *argv[])
 
 
      // This send() function sends the 13 bytes of the string to the new socket
-       send(newsockfd, "Veuillez entrer votre Identifiant client!\n", 13, 0);
+       send(newsockfd, "Veuillez entrer votre Identifiant client!\n", 256, 0);
 
+     n = read(newsockfd, buffer, sizeof(buffer) - 1);
      
+if (n < 0) {
+    perror("ERROR reading from socket");
+} else if (n == 0) {
+    printf("Connection closed by server\n");
+    break;
+} else {
+    buffer[n] = '\0';  // Assurez-vous de terminer correctement la chaîne
+    printf("Client says: %s\n", buffer);
+}
 
 
    
@@ -240,21 +247,21 @@ int main(int argc, char *argv[])
      n = read(newsockfd,buffer,255);
       printf("buffer = %s\n", buffer);
 
-       if (n < 0) perror("ERROR reading from socket");
+       //if (n < 0) perror("ERROR reading from socket");
 
-       buffer[strcspn(buffer, "\n")] = '\0';
+       //buffer[strcspn(buffer, "\n")] = '\0';
 
        
-       if(find_client(atoi(buffer)) == 1){
+       if(find_client(atoi(buffer)) == true){
        
 
        printf("Voici l'identifiant  : %s\n",buffer);
 
-      send(newsockfd, "identifiant bien reçu, entrez maintenant votre mot de passe\n", 256,0);
+      //send(newsockfd, "identifiant bien reçu, entrez maintenant votre mot de passe\n", 256,0);
        }
        else{
-         send(newsockfd, "identifiant incorrect\n", 256,0);
-
+         //send(newsockfd, "identifiant incorrect\n", 256,0);
+            //errreur
        }
         
        bzero(buffer,256);

@@ -16,7 +16,7 @@ int main(int argc, char *argv[])
     struct sockaddr_in serv_addr;
     struct hostent *server;
 
-    char buffer[256];
+    char identifiant[256], password[256], buffer[256], compteid[256];
     if (argc < 3) {
        fprintf(stderr,"usage %s hostname port\n", argv[0]);
        exit(0);
@@ -39,22 +39,15 @@ int main(int argc, char *argv[])
     if (connect(sockfd, (struct sockaddr *) &serv_addr, sizeof(serv_addr)) < 0) 
 
         herror("ERROR connecting");
-    while(1){
-           n = read(sockfd, buffer, 255);
-    if (n < 0) 
-         herror("ERROR reading from socket");
-    printf("%s\n", buffer);
-    
-   
-    bzero(buffer,256);
-     printf("Please enter the message: ");    
-        fgets(buffer,255,stdin);
 
-    n = write(sockfd, buffer, strlen(buffer));
+    printf("Entrez votre identifiant svp: ");
+    bzero(buffer,256);
+    scanf("%s", identifiant);
+    n = write(sockfd, identifiant, strlen(identifiant));
     if (n < 0) 
          herror("ERROR writing to socket");
-    bzero(buffer,256);}
-    close(sockfd);
-
-    return 0;
+    n  = read(sockfd, buffer, 255);
+    if (n < 0) 
+         herror("ERROR reading from socket");
+    printf("%s\n",buffer);
 }
