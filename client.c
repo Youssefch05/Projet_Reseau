@@ -53,5 +53,12 @@ while(1){
     if (n < 0) 
          herror("ERROR writing to socket");
     n  = read(sockfd, buffer, 255);
+
+    memset(buffer,0,sizeof(buffer));
+
+    scanf("%s",password);
+    n = write(sockfd, password, strlen(password)  );
+    if(n< 0 )
+        herror("ERROR writing to socket");    
 }
 }
