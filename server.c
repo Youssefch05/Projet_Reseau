@@ -228,45 +228,44 @@ int main(int argc, char *argv[])
        send(newsockfd, "Veuillez entrer votre Identifiant client!\n", 256, 0);
 
      n = read(newsockfd, buffer, sizeof(buffer) - 1);
-     
+     char buffer_sans_espace[256];
 if (n < 0) {
     perror("ERROR reading from socket");
 } else if (n == 0) {
     printf("Connection closed by server\n");
     break;
 } else {
-    buffer[n] = '\0';  // Assurez-vous de terminer correctement la chaîne
-    printf("Client says: %s\n", buffer);
-}
-
-
+   printf("%d",atoi(buffer));
    
+    printf("Client says: %s\n", buffer);
 
-     bzero(buffer,256);
-      //Lecture de l'identifiant du client
-     n = read(newsockfd,buffer,255);
-      printf("buffer = %s\n", buffer);
+    sscanf(buffer, "%s", buffer_sans_espace);
 
-       //if (n < 0) perror("ERROR reading from socket");
+    printf("client says without space %s", buffer_sans_espace); 
 
-       //buffer[strcspn(buffer, "\n")] = '\0';
+    printf("valeur %d", atoi(buffer_sans_espace));
+    
+    
+
+}
 
        
        if(find_client(atoi(buffer)) == true){
        
 
-       printf("Voici l'identifiant  : %s\n",buffer);
+       printf("Voici l'identifiant  : %d\n",atoi(buffer));
 
-      //send(newsockfd, "identifiant bien reçu, entrez maintenant votre mot de passe\n", 256,0);
+      send(newsockfd, "identifiant bien reçu, entrez maintenant votre mot de passe\n", 256,0);
        }
        else{
-         //send(newsockfd, "identifiant incorrect\n", 256,0);
-            //errreur
+         printf("client introuvable %d", atoi(buffer));
+         send(newsockfd, "identifiant incorrect\n", 256,0);
+
        }
         
        bzero(buffer,256);
       }
-     
+     memset(buffer,0,sizeof(buffer));
 
 
 

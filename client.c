@@ -39,15 +39,19 @@ int main(int argc, char *argv[])
     if (connect(sockfd, (struct sockaddr *) &serv_addr, sizeof(serv_addr)) < 0) 
 
         herror("ERROR connecting");
+while(1){
 
-    printf("Entrez votre identifiant svp: ");
+
+       n  = read(sockfd, buffer, 255);
+    if (n < 0) 
+         herror("ERROR reading from socket");
+    printf("%s\n",buffer);
+
     bzero(buffer,256);
     scanf("%s", identifiant);
     n = write(sockfd, identifiant, strlen(identifiant));
     if (n < 0) 
          herror("ERROR writing to socket");
     n  = read(sockfd, buffer, 255);
-    if (n < 0) 
-         herror("ERROR reading from socket");
-    printf("%s\n",buffer);
+}
 }
